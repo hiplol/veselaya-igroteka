@@ -29,7 +29,7 @@
             overflow: hidden;
         }
 
-        /* Красивый экран загрузки */
+        /* Экран загрузки */
         #loading-screen {
             position: absolute;
             top: 0;
@@ -82,7 +82,7 @@
             50% { opacity: 0.6; }
         }
 
-        /* Стили для самого холста с игрой */
+        /* Холст с игрой */
         canvas.emscripten {
             border: 2px solid var(--accent);
             border-radius: 12px;
@@ -93,12 +93,11 @@
             max-height: 95vh;
         }
 
-        /* Скрываем уродливые системные элементы Pygbag */
+        /* Скрываем системные элементы Pygbag */
         #infobox, #transfer, #status, #progress, #system, #crt, #pyconsole, #dlg, #box, #info { 
             display: none !important; 
         }
         
-        /* Кнопка назад */
         .back-btn {
             position: absolute;
             top: 20px;
@@ -119,16 +118,16 @@
 
     <a href="https://hiplol.github.io/" class="back-btn">← Back to Portfolio</a>
 
-    <!-- Кастомный экран загрузки -->
+    <!-- Экран загрузки -->
     <div id="loading-screen">
         <div class="loader-logo">Fun Arcade</div>
-        <div class="loader-text" id="load-status">Booting Python Environment...</div>
+        <div class="loader-text" id="load-status">Initializing Pygame...</div>
         <div class="progress-bar">
             <div class="progress-fill" id="load-progress"></div>
         </div>
     </div>
 
-    <!-- СКРИПТ PYGBAG -->
+    <!-- Скрипт Pygbag (Ваш код игры) -->
     <script src="https://pygame-web.github.io/cdn/0.9.3/pythons.js" type=module id="site" data-python="python3.12" data-LINES=42 data-COLUMNS=132 data-os="vtx,snd,gui" async defer>#<!--
 
 print("""
@@ -209,6 +208,7 @@ asyncio.run( custom_site() )
 
 # --></script>
 
+    <!-- Настройки Pygbag -->
     <script type="application/javascript">
         config = {
             xtermjs : "0" ,
@@ -216,7 +216,7 @@ asyncio.run( custom_site() )
             user_canvas : 0,
             user_canvas_managed : 0,
             gui_divider : 0,
-            ume_block : 0,
+            ume_block : 0, /* Отключаем блокировку клика */
             can_close : 0,
             archive : "sashs",
             gui_debug : 0,
@@ -228,15 +228,9 @@ asyncio.run( custom_site() )
             fb_height : "720"
         }
 
-        // Безопасное скрытие, чтобы не было ошибок "is not defined"
         async function custom_onload(debug_hidden) {
             const hideEl = (id) => { const el = document.getElementById(id); if(el) el.style.display = 'none'; };
-            hideEl('pyconsole');
-            hideEl('system');
-            hideEl('transfer');
-            hideEl('info');
-            hideEl('box');
-            hideEl('crt');
+            hideEl('pyconsole'); hideEl('system'); hideEl('transfer'); hideEl('info'); hideEl('box'); hideEl('crt');
         }
 
         let lastProgress = 0;
@@ -261,12 +255,13 @@ asyncio.run( custom_site() )
         }, 500);
     </script>
 
-    <script src="https://pygame-web.github.io/cdn/0.9.3/browserfs.min.js"></script>
+    <!-- ВАЖНО: Локальный скрипт BrowserFS (чтобы браузер его не блокировал) -->
+    <script src="browserfs.min.js"></script>
 
     <!-- Холст для игры -->
     <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=1></canvas>
 
-    <!-- СКРЫТЫЕ СИСТЕМНЫЕ ЭЛЕМЕНТЫ (Их требует Pygbag, но мы их не видим благодаря CSS) -->
+    <!-- Скрытые элементы, которые требует Pygbag -->
     <div id="transfer" hidden></div>
     <div id="status" hidden></div>
     <div id="progress" hidden></div>
